@@ -1,0 +1,39 @@
+<!-- Import the basic user template -->
+{% extends 'layouts/user.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<style>
+   .create_job {
+   position:relative;
+   float:left;
+   font-style: arial;
+   }
+
+    .create_job_middle {
+   position:relative;
+   font-style: arial;
+   }
+
+</style>
+<div class="page-header">
+   <h1>Welcome {{ username }}</h1>
+</div>
+
+ <div class="form-control btn-info ">
+<div class = "well">
+{%if username%}
+<p class="lead help-block "><span >Dear {{username}}, </span> <a href="{{ url_for('.job_create_get') }}" class= "create_job_middle" type="button">create new Message
+</a> <span>and start your journey with us.</span> </p>
+
+
+{%else%}
+<p class="lead help-block "><span >Dear user, </span> <a href="{{ url_for('.job_create_get') }}" class= "create_job_middle" type="button">create new Message
+</a> <span>and start your journey with us.</span> </p>
+{%endif%}
+
+</a>
+</div>
+
+</div>
+
+{% endblock %}

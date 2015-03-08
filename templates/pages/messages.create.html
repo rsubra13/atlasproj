@@ -1,0 +1,247 @@
+{% extends 'layouts/user.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<!-- trying the social buttons share -->
+<style>
+   .container{ text-align: center; }
+   .btn-xs
+</style>
+<style type="text/css">
+   textarea { 
+   resize: none; 
+   }
+   /*for hiding the div*/
+   .hidden { visibility: hidden; }
+   .unhidden { visibility: visible; } 
+</style>
+<!-- space -->
+<div>
+   <p></p>
+</div>
+
+<body>
+   <!-- Modal -->
+   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <h4 class="modal-title" id="myModalLabel">Software Engineer</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               <!--   <button type="button" class="btn btn-primary">Copy to Clipboard</button> -->
+               <button id="modalButton" type="submit" class="btn btn-primary" onclick = "ChangeTextArea()">Select
+               </button>     
+            </div>
+         </div>
+      </div>
+   </div>
+
+ <!-- text Field Macro -->
+
+      {% macro render_field(field) -%}
+        <div class="control-group{% if field.errors %} error{% endif %}">
+           <br>
+          <label class="control-label" for="{{ field.id }}">
+            {{ field.label }}
+          </label>
+          <div class="controls">
+            {{ field(**kwargs)|safe }}
+
+            {% for error in field.errors %}
+            <p class="help-block">
+              {{ error }}
+            </p>
+            {% endfor %}
+          </div>
+        </div>
+      {%- endmacro %}
+
+
+   <!--New try-->
+
+    <!--first split-->
+   <div class="row">
+       <div class="col-md-6">
+          <h3 class="col-md-offset-1"> Candidate Details </h3>
+            <div class="panel panel-danger">
+
+             <div class="panel-heading">
+            
+
+           <form class="well row-fluid" method="POST" action="/candidates/create/" >
+
+            {{ render_field(form.candidate_name, class_='form-control  col-md-12', placeholder = "Ex : John Doe",
+                                required='required') }}
+
+            {{ render_field(form.candidate_email, type='email', class_='form-control  col-md-12', placeholder = "Ex : abc@gmail.com",
+                                required='required') }}
+
+            {{ render_field(form.candidate_phone, type='phone', class_='form-control  col-md-12',
+                                 placeholder = "Format : (countryCode)-(AreaCode)-(Number)", required='required') }}
+
+            {{ render_field(form.candidate_city, class_='form-control col-md-12',
+                                 placeholder = "Ex:Phoenix",required='required') }}
+
+
+           <div class="control-group">
+                 <br>
+                      <label class="control-label">
+                        Country
+                      </label>
+              <div class="controls">
+                         {{form.candidate_country(class_='form-control col-md-12')}}
+              </div>
+           </div>
+
+
+            {{ render_field(form.candidate_gpa, class_='form-control  col-md-12',  placeholder = "Ex : 3.56 "
+                                ) }}
+
+            {{ render_field(form.candidate_degree, class_='form-control  col-md-12',  placeholder = "Ex : Masters in CS",
+                                required='required') }}
+
+            {{ render_field(form.candidate_website, class_='form-control  col-md-12',  placeholder = "Ex : http://example.com",
+                                ) }}
+
+            {{ render_field(form.candidate_skills,rows="6" ,cols="30" ,maxlength=240,class_='form-control col-md-12',
+                                 placeholder = "Ex : Java, Spring, Hibernate", required='required') }}
+
+            {{ render_field(form.candidate_pay, class_='form-control  col-md-12',  placeholder = "Ex : 75000 p.a",
+                                ) }}
+
+            {{ render_field(form.candidate_relocate_cities, class_='form-control  col-md-12',  placeholder = "Tempe , Newyork"
+                                ) }}
+
+            {{ render_field(form.candidate_relocation, class_='form-control  col-md-12',  placeholder = "",
+                                ) }}
+
+
+
+            <div class="control-group">
+                <br>
+                  <label class="control-label">
+                    Resume
+                  </label>
+                <div class="controls">
+                    <textarea name="candidate_resume" id="candidate_resume" type=text  class=" form-control col-md-12 " rows="15" cols = '60' >
+                    {%if resume_text%}
+
+                             {{resume_text}}
+
+                    {%endif%}
+
+                    </textarea>
+
+                   </div>
+              </div>
+
+                
+               <div class="control-group">
+                <br>
+
+                <div class="controls">
+                    <input name="jobIDList" id="jobIDList" type=hidden  class=" form-control col-md-12 " value="{{candidates_jobIDList}}" >
+
+                   </div>
+              </div>
+
+            <br><br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+
+            </form>
+            </div>
+          </div>
+       </div>
+
+       <!--
+       second split -->
+      <!--<div class="row " id= "hiddendiv"  >-->
+         <div class="col-md-4" >
+             <br>
+             <div class="header">
+                     <h3 class="help-block">Uploaded files</h3>
+             </div>
+            <div class="panel panel-info">
+
+               <div class="panel-heading">
+
+                  {#filename start#}
+                          <div class="well row-fluid" >
+
+                             <div>
+                                This is a list of the files you just uploaded, click on them to view/download.
+                                 <hr/>
+                                <ul>
+                                   {% if filenames_only_list %}
+                                   {% for file in filenames_only_list %}
+                                   <li class="help-block"><a href="{{url_for('.uploaded_file', filename=file)}}">{{file}}</a></li>
+                                   {% endfor %}
+                                   {% endif %}
+                                </ul>
+                             </div>
+                             <hr/>
+                          </div>
+               </div>
+               {#// enf of the filename#}
+            </div>
+         </div>
+      <!--</div>-->
+
+   </div>
+
+
+
+
+
+
+
+</body>
+
+
+<!-- Script to hide / unhide the DIV -->
+<script type="text/javascript">
+
+   function EmailAddressEdit()
+   {
+   
+   if(document.newForm.checkBoxEmail.checked == true)
+   {
+   document.newForm.EmailAddress.disabled = false;
+   }
+   
+   }
+
+    function PhoneNumberEdit()
+   {
+
+   if(document.newForm.checkBoxPhoneNumber.checked == true)
+   {
+   document.newForm.PhoneNumber.disabled = false;
+   }
+
+   }
+
+    function CityEdit()
+   {
+
+   if(document.newForm.checkBoxCity.checked == true)
+   {
+   document.newForm.city.disabled = false;
+   }
+
+   }
+
+
+        });
+
+</script> 
+{% endblock %}

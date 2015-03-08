@@ -1,0 +1,91 @@
+{% extends 'layouts/form.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+
+
+
+<div class="row">
+<div class="col-md-6">
+    <div class="panel btn-warning">
+    <div class="panel-body well">
+
+    <div class="col-sm-offset-1">
+    <!--<img src="/static/img/logo.png">-->
+    </div>
+
+    <form action="" method="post" class="form" >
+
+    <div class= " form-control btn-info col-sm-offset-0">
+      <h3 class="form-heading">
+     Login <a href="{{ url_for('.home') }}" title="Back to homepage">
+
+        <i class="icon icon-home pull-right"></i></a></h3>
+
+
+
+
+        <div class="form-control">
+            <div class="first-input">
+
+              <input type="text" width = "278px"
+                  id="username"
+                  name="username"
+                  class="first-input"
+                  autofocus = "true"
+                  placeholder="Username" required>
+                <i class="form-control-feedback glyphicon glyphicon-user"></i>
+            </div>
+        </div>
+
+        <div class="form-control">
+
+            <div class="last-input">
+            <span class="add-on"> <i class="icon-password"></i></span>
+
+              <input type="password"
+                id="password"
+                name="password"
+                class= "last-input"
+                placeholder="Password" required>
+                <i class="form-control-feedback glyphicon glyphicon-star"></i>
+            </div>
+
+        </div>
+
+
+       <p class="pull-left"><a href="{{ url_for('.forgot') }}"> <span style="color:white" >Forgot password??</span></a></p>
+        <p class="pull-right"><a href="{{ url_for('.register') }}"><span style="color:white" >Register</a></p>
+
+        <input type="submit" value="Login" class="btn btn-primary btn-lg btn-block">
+        </form>
+        <div>
+
+        </div>
+        </div>
+        </form>
+
+    </div>
+    </div>
+    </div>
+
+
+
+
+    <div class="col-md-6 col-sm-offset-1">
+    <span class="link"><a href = "{{url_for('.job_search')}}"><span style="-moz-background-origin:border-box animation-fill-mode:backwards;" >No time to Register? Check the Jobs list directly.</a></span>
+
+
+
+
+        {% endblock %}
+
+
+    </div>
+    </div>
+
+
+
+</div>
+</div>
+

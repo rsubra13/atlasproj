@@ -1,0 +1,206 @@
+{% extends 'layouts/user.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+
+
+
+<div class="page-header">
+	<h1>Welcome {{ user }}  </h1>
+</div>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<bold>
+		How can we Help you??
+	</div>
+	<div></br></div>
+
+
+	<div class="panel-body">
+		<form role="form" class="form-inline" method = "post">
+			<p class="lead">{{user}}'s Dashboard.</p>
+			<a href="{{ url_for('.dc_create') }}"class="btn btn-info" role="button">Create job
+			</a></br>
+			<div class="panel-body">
+				<!-- Main Table -->
+				<style>   
+					.dctable
+					{
+					border:1px solid #3385D6;
+					border-collapse:collapse;
+					}
+					.dctd
+					{
+					border:1px solid #3385D6;
+					}
+					.outerdctd
+					{
+					border:1px solid #FFFFFF;
+					}
+					.dcth
+					{
+					background-color:#3385D6;
+					color:white;
+					}
+				</style>
+				<style>
+					.link, .explanation {display:inline}
+					.link {float: right}
+					.explanation {float: right}
+				</style>
+				<table class="dctable" width="100%" border="1" cellspacing="0" cellpadding="10">
+					<tr>
+						<p class="lead">{{user}}'s recent Jobs</p>
+						<td class = 'outerdctd' width="50%">
+							<!-- Table on left side -->
+							<table  class = "dctable" width="70%" border="1" cellspacing="0" cellpadding="1" align="left">
+								<tr>
+									<th class="dcth" >Collection</th>
+									<th class="dcth">Created</th>
+									<th class="dcth">N</th>
+									<th class="dcth"></th>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.dc_stats',data='ds11334') }}">DataSet #11334</a>  
+									</td>
+									<td class = "dctd">
+										Apr 14, 2014.
+									</td>
+									<td class = "dctd"> 23</td>
+									<td class = "dctd"> <abbr title="Create a Graph Collection">
+										<a href="{{ url_for('.gc_create') }}"> <img src="/static/img/create_graph.png "> </a> </abbr> 
+									</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.dc_stats',data='ds53677') }}">DataSet #53677</a>
+									</td>
+									<td class = "dctd">
+										Apr 14, 2014.	
+									</td>
+									<td class = "dctd"> 53</td>
+									<td class = "dctd"> <abbr title="Create a Graph Collection">
+										<a href="{{ url_for('.gc_create') }}"> <img src="/static/img/create_graph.png "> </a> </abbr> 
+									</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.dc_stats',data='ds78678') }}">DataSet #78678</a>  
+									</td>
+									<td class = "dctd">
+										Apr 12, 2014.
+									</td>
+									<td class = "dctd"> 23</td>
+									<td class = "dctd"> <abbr title="Create a Graph Collection">
+										<a href="{{ url_for('.gc_create') }}"> <img src="/static/img/create_graph.png "> </a> </abbr> 
+									</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.dc_stats',data='ds77478') }}">DataSet #77478</a>  
+									</td>
+									<td class = "dctd">
+										Apr 10, 2014.
+									</td>
+									<td class = "dctd"> 2343</td>
+									<td class = "dctd"> <abbr title="Create a Graph Collection">
+										<a href="{{ url_for('.gc_create') }}"> <img src="/static/img/create_graph.png "> </a> </abbr> 
+									</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.dc_stats',data='ds89790') }}">DataSet #89790</a>  
+									</td>
+									<td class = "dctd">
+										Apr 08, 2014.
+									</td>
+									<td class = "dctd"> 23</td>
+									<td class = "dctd"> <abbr title="Create a Graph Collection">
+										<a href="{{ url_for('.gc_create') }}"> <img src="/static/img/create_graph.png "> </a> </abbr> 
+									</td>
+								</tr>
+								<tr>
+							</table>
+							<!-- END -->
+						</td>
+
+						<td class = "outerdctd" width="50%">
+							<!-- Table on right side -->
+							<table class = "dctable" width="70%" border="1" cellspacing="0" cellpadding="1" align="right">
+								<p class="lead">{{user}}'s recent candidates</p>
+								<tr>
+									<th class="dcth" >Collection</th>
+									<th class="dcth">Created<br></th>
+									<th class="dcth">N</th>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.gc_stats',data='gc11334') }}">gc#11334</a>  
+									</td>
+									<td class = "dctd">
+										Apr 14, 2014.
+									</td>
+									<td class = "dctd">23</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.gc_stats',data='gc11334') }}">gc#11334</a>  
+									</td>
+									<td class = "dctd">
+										Apr 14, 2014.
+									</td>
+									<td class = "dctd">23</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.gc_stats',data='gc124334') }}">gc#124334</a>  
+									</td>
+									<td class = "dctd">
+										Apr 14, 2014.
+									</td>
+									<td class = "dctd"> 243</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.gc_stats',data='gc11444') }}">gc#11444</a>  
+									</td>
+									<td class = "dctd">
+										Apr 12, 2014.
+									</td>
+									<td class = "dctd"> 23</td>
+								</tr>
+								<tr>
+									<td class = "dctd">
+										<a href="{{ url_for('.gc_stats',data='gc200') }}">gc#200</a>  
+									</td>
+									<td class = "dctd">
+										Apr 11, 2014.
+									</td>
+									<td class = "dctd"> 12311</td>
+								</tr>
+							</table>
+							</br>
+							<!-- END -->
+						</td>
+					</tr>
+				</table>
+				<a href = "{{url_for('.dc_list')}}">View more DataCollections</a> 
+				<span class="link"><a href = "{{url_for('.gc_list')}}">View more GraphCollections</a></span>
+			</div>
+	</div>
+	<br> <br> 
+	</body>
+	</form>
+
+	<span class="link"><a href = "{{url_for('.list_jobs')}}">List Jobs</a></span>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'layouts/form.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+<style type="text/css" media="screen">
+ .lbl{
+  color: #030FFF; 
+  font-size: 12pt
+ } 
+</style>
+
+  {% macro render_field(field) -%}
+        <div class="form-horizontal{% if field.errors %} error{% endif %}">
+           <br>
+          <label class="form-group lbl col-md-8" for="{{ field.id }}">
+            {{ field.label }}
+          </label>
+          <div class="form-group controls">
+            {{ field(**kwargs)|safe }}
+
+        
+            {% for error in field.errors %}
+            <p class="help-block">
+              {{ error }}
+            </p>
+            {% endfor %}
+
+          </div>
+
+        </div>
+      {%- endmacro %}
+
+
+
+
+  <div class="form-inline well col-md-4">
+      <h3 class="form-heading">Register <a href="{{ url_for('.home') }}" title="Back to homepage">
+      <i class="icon icon-home pull-right"></i></a></h3>
+  <div class="form-group">
+  <form method="post" >
+
+ 
+            {{ render_field(form.name, class_='form-control first-input', 
+                                required='required') }}
+
+            {{ render_field(form.email, type='email',class_='form-control', 
+                                required='required') }}
+
+            {{ render_field(form.password, type='password', class_='form-control',
+                                 required='required') }}
+
+            {{ render_field(form.confirm, type='password', class_='form-control',
+                                 required='required') }}
+
+            {{ render_field(form.institution, class_='form-control',
+                                required='required') }}
+   <br><br>
+    <input type="submit" value="Register" class="btn btn-primary" >
+    
+  </form>
+      </div>
+      </div>
+{% endblock %}

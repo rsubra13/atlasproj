@@ -1,0 +1,38 @@
+
+URL :
+
+1. Any number of URLs are allowed in the Chat Message.
+2. There is no length restrictions for URL.
+3. Assumption is that, most realtime URLs either start with http:// or https:// or
+   bitly shortened links ( ex: http://bit.ly/1x2qpLW)
+4. A set of characters will be treated as URL till a whitespace is reached.
+   Example:
+   Valid Input : "@Ramki (Smiley) How are you?? Weather is (awesome)
+                  Did you check @Adam's blog http://bit.ly/1x2qpLW and http://bit.ly/1xsadasd"
+
+   ###########  Formatted JSON ############ {
+    "emoticons": [
+        "Smiley"
+    ],
+    "mentions": [
+        "Ramki"
+    ],
+    "url": [
+        "http://bit.ly/1x2qpLW",
+        "http://bit.ly/1xsadasd"
+    ]
+}
+
+   Invalid I/p:  @Ramki (Smiley) How are you?? Did you check http://msn.com?&id=1&page=4http://bit.ly/1xsadas
+   (Here both URLs are seperated by commas which will be treated as a single URL and it is not expected. This is
+   designed to cater the real-time needs that no 2 URLs will be continuous, there would be a whitespace.
+
+5. Any URL which cannot be reached will not appear in the final output.
+   Ex :  No connection adapters were found for 'ftp://ftp6.jp.freebsd.org/pub/FreeBSD/'
+
+Emoticons:
+
+Assumption : Emoticons, Mentions will be mentioned only once in the final json,
+             even they occured(repeated) more than once in the input string.
+Reason     : @Ramki1988 can be only a specific person.
+             May be in future if there is a need to remove this condition, then it will be taken care.

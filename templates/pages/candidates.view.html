@@ -1,0 +1,576 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+{% from "pages/pagination.html" import render_pagination %}
+
+
+{#Script to initialize Linkedin#}
+<script type="text/javascript" src="http://platform.linkedin.com/in.js">
+   api_key: 75wru5qgf2wj6r
+   //onLoad: onLinkedInLoad
+   authorize: false
+   scope: r_fullprofile,r_contactinfo,r_emailaddress
+
+</script>
+
+{#css#}
+<style>
+
+   a.newmore{
+
+   margin: 3px;
+   padding: 3px;
+   background: #EEEEEE;
+   }
+
+   a.newmore.highlite{
+      background: red;
+   }
+   .custom-txt{
+       text-align: 40px;
+   }
+
+   .custom-div{
+       width:10%;
+   }
+</style>
+
+
+<!-- Script to hide / unhide the DIV -->
+<script type="text/javascript">
+
+    function unhide(divID)
+   {
+     var item = document.getElementById(divID);
+     if (item) {
+       item.className=(item.className=='hidden')?'unhidden':'hidden';
+
+
+     }
+   }
+
+   function showDescription(divID1){
+     var item1 = document.getElementById(divID1);
+     console.log("comes here")
+     item1.className=(item1.className=='hidden')?'unhidden':'hidden';
+     document.getElementById("more").innerHTML ="..less"
+
+   }
+
+</script>
+
+{#
+    {% macro render_field(field) -%}
+        <div class="control-group{% if field.errors %} error{% endif %}">
+           <br>
+          <label class="label-color col-md-4" for="{{ field.id }}">
+            {{ field.label }}
+          </label>
+          <div class="controls">
+            {{ field(**kwargs)|safe }}
+
+
+            {% for error in field.errors %}
+            <p class="help-block">
+              {{ error }}
+            </p>
+            {% endfor %}
+
+          </div>
+
+        </div>
+  {%- endmacro %} #}
+
+
+ <body>
+   <div xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"> <br><br> </div>
+
+
+   {#Linkedin modal#}
+   <div class="modal fade" id="LinkedInModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="well modal-content ">
+            <div class="btn-danger modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <h4 class="modal-title" id="myModalLabel">Linkedin Profile</h4>
+            </div>
+            {% raw %}
+    <form  role="form" class="well row-fluid" method="POST" action="/linkedin/success" >
+    <script type="application/x-handlebars" id="linkedin-form-template">
+
+
+        <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+        <div class="row">
+
+
+                   {{#if pictureUrl}}
+                  <div class="col-xs-12 col-md-4">
+                              <img src={{pictureUrl}} name="pictureUrl" id="pictureUrl"class="img-responsive " alt="Responsive image">
+                  </div>
+                   {{/if}}
+
+
+                   {{#if linkedinjobs}}
+                    <input type="hidden" name="linkedinjobs" id="linkedinjobs" value="{{linkedinjobs}}">
+                   {{/if}}
+
+                     {{#if name}}
+                    <div class="col-xs-6 col-md-8">
+                        <label class="control-label" >
+                          Name:
+                         </label>
+                              <input type="text" name="name"  id="name" class="well well-sm input_linkedin_nonfocus" value="{{name}}">
+                      </div>
+                     {{/if}}
+
+        {{#if title}}
+                      <div class="col-xs-6 col-md-8">
+                        <label class="control-label" >
+                          Title:
+                         </label>
+                        <input type="text"  name="title" id="title" class="well well-sm input_linkedin_nonfocus" value="{{title}}">
+                    </div>
+         {{/if}}
+
+
+                    {{#if email}}
+                    <div class="form-inline col-xs-6 col-md-10">
+                          <label class="control-label col-md-3" >
+                          Email:
+                         </label>
+                              <input type="text" name="email" id="email" class="well well-sm input_linkedin_nonfocus" value="{{email}}">
+                    </div>
+                     {{/if}}
+
+
+                     {{#if phone}}
+                        <div class="form-inline col-xs-6 col-md-10">
+                        <label class="control-label col-md-3" >
+                          Phone:
+                         </label>
+                        <input type="text" name="phone" id="phone" class="well well-sm input_linkedin_nonfocus" value="{{phone}}">
+                        </div>
+                    {{/if}}
+
+                     {{#if location}}
+                    <div class="form-inline col-xs-6 col-md-10">
+                        <label class="control-label col-md-3" >
+                          Location:
+                         </label>
+                        <input type="text" name="location" id="location" class="well well-sm input_linkedin_nonfocus" value="{{location}}">
+                     </div>
+                      {{/if}}
+
+        </div>
+        {{#if  summary}}
+       <div class="form-group">
+                     <div class="col-md-12">
+                             <label class="control-label" >
+                                Summary:
+                               </label>
+
+                        <textarea name="summary" id = "summary" class=" well form-control " rows="15" cols = '60'  placeholder="">
+                                {{summary}}
+                        </textarea>
+                     </div>
+        </div>
+        {{/if}}
+
+         {{#if skillsList}}
+          <div class="form-group">
+                     <div class="col-md-12">
+                     <label class="control-label" >
+                          Skills:
+                         </label>
+                        <textarea name = "skillsList"  id = "skillsList" class=" well form-control " rows="5" cols = '60'  placeholder="">
+                         {{skillsList}}
+                        </textarea>
+                     </div>
+            </div>
+            {{/if}}
+
+            {{#if educationList}}
+            <div class="form-group">
+                     <div class="col-md-12">
+                     <label class="control-label" >
+                          Education:
+                         </label>
+                        <textarea name = "educationList" id = "educationList" class=" well form-control " rows="5" cols = '60'  placeholder="">
+                         {{educationList}}
+                        </textarea>
+                     </div>
+              </div>
+              {{/if}}
+
+            {{#if courseList}}
+            <div class="form-group">
+                     <div class="col-md-12">
+                     <label class="control-label" >
+                          Courses:
+                         </label>
+                        <textarea  name = "courseList"  id = "courseList" class=" well form-control " rows="5" cols = '60'  placeholder="">
+                         {{courseList}}
+                        </textarea>
+                     </div>
+            </div>
+            {{/if}}
+
+            <!-- This part is not working -->
+            {{#if positionsTitle}}
+            <div class="form-group">
+                     <div class="col-md-12">
+                     <label class="control-label" >
+                          Previous Experience:
+                         </label>
+                        <textarea name = "positions" id = "positions" class=" well form-control " rows="15" cols = '60'  placeholder="">
+
+                        - {{positionsTitle}} @ {{positionsDate}}
+                        -{{positionsSummary}}
+                        {{myString}}
+                        {{#each myString}}
+                        - {{title}}: {{date}}
+                        {{/each}}
+
+
+                        </textarea>
+                     </div>
+            </div>
+             {{/if}}
+
+            </script>
+          {% endraw %}
+
+
+            <div class="modal-body" id="profiles" >
+                 {#Linkedin Profile contents got from above block.#}
+              </div>
+
+             <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               <input type="submit" value="Apply"  class="btn-success span2">
+            </div>
+
+</div>
+ </form>
+
+  </div>
+
+   </div>
+   {#    modal end#}
+   <!-- Main Modal -->
+   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content" id="myModalBody" >
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <h4 class="modal-title text-right text-success icon-thumbs-up" id="myModalLabel">
+                  Apply to this Job
+               </h4>
+            </div>
+            {# Main Modal Body#}
+            <div class="modal-body well" >
+               <h3 class="text-muted">Apply through Linkedin</h3>
+               <br>
+               {#Linkedin Javascript Button#}
+
+             <form  action="/linkedin" method="post" enctype="multipart/form-data">
+             <input type="hidden" name="linkedinjobIDList" id="linkedinjobIDList">
+               <script type="IN/Login" data-onAuth="LinkedInSuccess" >
+                  if (IN.User.isAuthorized()){
+                         console.log("true");
+                         }
+                  else{
+                  console.log("false");
+                  }
+               </script>
+
+
+
+               <!-- <script src="../../static/js/linkedin.js"></script> -->
+               <script type="text/javascript">
+                  {#opens up a new modal with Linkedin Data#}
+
+                   function LinkedInSuccess() {
+                       // alert('Linkedin Login Success. Jobs Selected are:');
+                       // alert($('input#linkedinjobIDList').val());
+                       var linkedinjobs = $('input#linkedinjobIDList').val();
+                       console.log("inside", linkedinjobIDList)
+                       $('#myModal').modal('toggle');
+                       // linkedinjobIDList - passing this to JS file and setting the hidden field
+                       onLinkedInLoad(linkedinjobIDList);
+                       onLinkedInAuth();
+                      $('#LinkedInModal').modal();
+
+
+
+                   }
+
+               </script>
+               </form>
+               <br>
+            </div>
+            <div class="container well ">
+               <div class="header">
+                  <h3 class="text-muted">Upload your resume</h3>
+               </div>
+               <hr/>
+               <form  action="/user/profile_details" method="post" enctype="multipart/form-data">
+                  <br>
+                   <input type="hidden" name="jobIDList" id="jobIDList">
+
+                   <input type="file" multiple="" name="file[]" class="btn btn-primary fileinput-button" /><br />
+                  {#               <a href="{{ url_for('.upload') }}"class="btn btn-success " name="file[]" role="button" id="fileupload">Create Job</a>#}
+                  <input type="submit" value="Upload"  class="btn-success span2">
+               </form>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <!-- divide the page into 2 main grids and then into nested grids -->
+   <!-- 1st grid -->
+{#start of 1st grid#}
+
+   <div class="row">
+   <div class="col-md-9 well">
+      <p class="bold">  </p>
+      <div class="row">
+         <!--    inside div of column 9 -->
+         <div class="col-md-10 col-md-offset-1 panel panel-danger ">
+            <h4 class="bold"> Available Jobs</h4>
+            {%if not no_results%}
+            <span class="help h7 btn-default">Select the checkboxes to apply multiple jobs</span>
+            {%endif%}
+            <br><br>
+
+
+            {%if no_results %}
+             <div class="well">
+
+                  <h3>We couldn't find any results matching your search</h3>
+                  <p>Here are some things you can try:</p>
+
+                  <ul>
+                    <li>Broaden your search keywords.</li>
+                    <li>Try different keywords.</li>
+                    <li>Check your spelling.</li>
+                  </ul>
+            </div>
+
+            {%endif%}
+
+            <!--start of pagination and apply-->
+
+             {%if not no_results%}
+            <div class="form-inline">
+                 <div class="col-sm-3">
+                        <form role="form" class="form-inline" method = "post">
+                           <a href = '#'class="btn btn-danger " role="button" data-toggle="modal" data-target="#myModal" id="applymodal" >Apply</a>
+                        </form>
+                 </div>
+
+                 <div class="col-md-9">
+
+                     {%if pagination%}
+                            {{ render_pagination(pagination) }}
+                     {% endif%}
+
+                      <!--<div class="col-md-offset-6">-->
+                             <!--<span style="color:saddlebrown" ><a href="{{ url_for('.job_search') }}">Show all Jobs</a></span>-->
+                       <!--</div>-->
+
+                 </div>
+
+             </div>
+
+             <!--end of apply and pagination-->
+
+            <br>
+            {#accordian related code#}
+            <div class="panel-group" id="accordion2">
+               {%if job_accordian_new%}
+
+
+               {% for each_job in job_accordian_new%}
+
+               <div class="panel panel-default" id="accordianID">
+                  <div class="panel-heading" id="checklist">
+                     <h4 class="panel-title">
+                        <input type="checkbox" class="chk" value="{{each_job.id}}" id="check{{ each_job.id}}">
+                        <a data-toggle="collapse" data-parent="#accordion2" href="#{{ each_job.id}}">
+                        {{each_job.jobtype}} {{ each_job.title}} @ {{each_job.institution}} in {{each_job.location}}
+                        </a>
+                        </input>
+                     </h4>
+                  </div>
+
+                     <div id="{{ each_job.id}}"class="panel-collapse">
+                        <div class="panel-body">
+
+                           <div class="form-inline">
+                              <div class="col-md-3">
+                                 <span class="custom-txt" style="color:black" ><strong>Qualifications:</strong></span>
+                              </div>
+                              <div class="col-md-3">
+                                 {{each_job.qualification}}
+                              </div>
+                           </div>
+
+                           <div class="form-inline">
+                              <div class="col-md-3">
+                                 <span class="btn-group-lg"  style="color:black" ><strong>Experience:</strong></span>
+                              </div>
+                              <div class="col-md-3">
+                                 {{each_job.experience}}
+                              </div>
+                           </div>
+
+                           <div class="form-group">
+                              <div class="col-md-3">
+                                 <span class="btn-group-lg"  style="color:black" ><strong>Summary:</strong></span>
+                              </div>
+                              <div class="col-md-9">
+                                 {{each_job.summary}}
+                              </div>
+                           </div>
+                           <div class="col-md-3 form-group hidden" id="{{ each_job.id }}{{ each_job.id }}">
+                              <div class="col-md-3" >
+                                 <span class="btn-group-lg"  style="color:black" ><strong>Description:</strong></span>
+                              </div>
+                              <div class="col-md-9">
+                                 {{each_job.description}}
+                              </div>
+                           </div>
+
+
+                           <div class="form-group">
+                              <div class="col-md-6">
+                                 {#<span class="link" ><a href= "javascript:unhide('desc{{ u[0] }}');">Check More</a> </span>#}
+                                <!--  onclick="showDescription({{each_job.id }}{{each_job.id}}); -->
+                               <a id="more {{ each_job.id }}" name="more" class="more"   onlick= accordianDesc("#{{each_job.id }}{{each_job.id}}"); "></a>
+{#                                  <a class="newmore">..more</a>#}
+{#                                 <ul>#}
+{#                                    <li><b>Click me!</b></li>#}
+{#                                    <li>You can also <b>Click me!</b></li>#}
+{##}
+{#                                 </ul>#}
+
+
+
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+
+                  {# end of accordian #}
+                  <div>
+                     <br>
+                  </div>
+
+                 <div class="col-md-9 col-md-offset-3">
+
+                     {%if pagination%}
+                            {{ render_pagination(pagination) }}
+                     {% endif%}
+                  </div>
+
+
+               </div>
+               {%endif%} <!-- this is the end of "no_results check" -->
+               {# end of col-10 #}
+            </div>
+            {#end of row#}
+         </div>
+         {#end of 9 col#} <!-- end of 1st grid -->
+      </div>
+
+
+      <!--  start of second grid -->
+      <div class="col-md-3">
+         <div class="well">
+            <h4 class="bold"> Refine the results </h4>
+            <form class="form-horizontal" action='/job/search 'role="form" method='get'>
+
+               <div class="form-group">
+                  <div class="col-md-6">
+                     <span style="color:black" >Keywords</span>
+                  </div>
+                  <input type="text"
+                     class="form-control"  name="job_keyword" id="job_keyword" placeholder="Type any job keywords here">
+                  <!-- placeholder -->
+                  <br>
+                  <div class="col-md-10">
+                     <span style="color:black" >Company Name</span>
+                  </div>
+                  <input type="text"
+                     class="form-control"  name="job_companyname" id="job_companyname" placeholder="Type the company name here">
+                  <!-- placeholder -->
+                  <br>
+                  <div class="col-md-6">
+                     <span style="color:black" >Job Title</span>
+                  </div>
+                  <input type="text"
+                     class="form-control"  name="job_title" id="job_title" placeholder="Type the job title here">
+
+                  <!--<div class="col-md-1 col-md-offset-4">-->
+                     <!--<span style="color:saddlebrown" >(OR)</span>-->
+                  <!--</div>-->
+
+                   <br>
+                   <div class="col-md-6 col-md-offset-8">
+                     <span style="color:saddlebrown" ><a href="{{ url_for('.job_search') }}">Reset all</a></span>
+                  </div>
+
+                  <!--<div class ="col-sm-offset-1">-->
+                     <!--<h4 class="bold"> Select from the following</h4>-->
+                  <!--</div>-->
+                  <!--<div class="col-md-8">-->
+                     <!--<span style="color:black" >Job Title</span>-->
+                  <!--</div>-->
+                  <!--<br>-->
+                  <!--<div class="col-md-6">-->
+                     <!--{%if form%}-->
+                     <!--{{form.make(id="make_select")}}-->
+                     <!--{% endif %}-->
+                  <!--</div>-->
+                  <!--<br>-->
+                  <!--<br>-->
+                  <!--<div class="col-md-8">-->
+                     <!--<span style="color:black" >Company Name</span>-->
+                  <!--</div>-->
+                  <!--<br>-->
+                  <!--<div class="col-md-6">-->
+                     <!--{%if form%}-->
+                     <!--{{ form.model(id="model_select") }}-->
+                     <!--{% endif %}-->
+                     <!--</input>-->
+                  <!--</div>-->
+                  <br><br>
+                  <div class="col-md-6 col-md-offset-3">
+                     <button class ="btn btn-success"  type="submit">Submit</button>
+                  </div>
+               </div>
+            </form>
+            <!--{% if chosen_make %}-->
+            <!--<p>Please see the refined search results as per your need</p>-->
+            <!--<ul>-->
+               <!--{{ chosen_make }}-->
+               <!--{{ chosen_model}}-->
+            <!--</ul>-->
+            <!--{% endif %}-->
+            <!-- end of second grid -->
+         </div>
+         <!-- end of outer grid -->
+      </div>
+
+   </div>
+</body>
+{% endblock %}

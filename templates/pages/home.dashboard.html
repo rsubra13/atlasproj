@@ -1,0 +1,192 @@
+<!-- Import the basic user template -->
+{% extends 'layouts/user.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+
+<style>
+   .create_job {
+   position:relative;
+   float:right;
+   font-style: arial;
+   }
+
+
+   table {
+    width: 100%;
+    table-layout: fixed;
+}
+.skillstd:nth-child(n) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-overflow-multiline: ellipsis;
+    white-space: nowrap;
+
+}
+
+</style>
+
+
+<div class="page-header ">
+   <h1>Welcome {{ user }}</h1>
+
+	 <!-- create job link -->
+          <a href="{{ url_for('.job_create_get') }}" class= " create_job btn btn-primary" type="button">Create a New Job
+          </a>
+          <br>
+
+</div>
+
+
+<!-- Dividing the page to two Divs -->
+
+<div class="row">
+<div class="col-md-6">
+	<div class="well panel">
+	   <div class="panel-body">
+      <form role="form" class="form-inline" method = "post">
+
+      <p class="lead">Recent Jobs</p>
+      {%if jobs_new%}
+      <!-- First div has the dashboard of Jobs -->
+      <div class="table-responsive">
+
+         <table class="table table-hover table-condensed" >
+			<form action="" method="post" class="form" >
+			    		<tr >
+			    			{% for col in job_table_columns %}
+			    			<th class="success">{{ col }}</th>
+			    			{% endfor %}
+
+			    		</tr>
+
+
+			    			<tr class = ".table-hover">
+								{% for each_row in jobs_new %}
+										<td class="danger">
+											<a href="{{ url_for(('.job_edit_get'), job_id = each_row.id) }}">
+					    					{{ each_row.id}}
+					    				 </td>
+					    				 <td class="danger">
+											<a href="{{ url_for(('.job_edit_get'), job_id = each_row.id) }}">
+					    					{{ each_row.title}}
+					    				 </td>
+
+					    				  <td class="danger">
+											{{ each_row.location }}
+										 </td>
+
+										  <td class="danger">
+											{{ each_row.status }}
+										 </td>
+
+										  <td class="danger">
+											{{ each_row.date | datetime }}
+					    				  </td>
+
+						    </tr>
+					    	{% endfor %}
+
+			    	</form>
+
+			    </table>
+
+			 </div>
+      <!--  <div class="panel-body"> -->
+      <span class="link"><a href = "{{url_for('.list_jobs')}}">View full jobs list</a></span>
+      {%else%}
+
+		<p> No Jobs created</p>
+
+	{%endif%}
+   </div>
+
+</div>
+</div>
+<div>
+
+
+<!-- second div is the table for Recent Candidates -->
+<div class="row">
+<div class="col-md-6">
+   <div class="well panel ">
+      <div class=" panel-body">
+         <p class="lead bold">Recent Candidates</p>
+         {%if candidates_new%}
+         <!-- Second div has the dashboard of Candidates-->
+
+         <div class="table-success">
+		<table class="table table-hover table-responsive" >
+			<form action="" method="post" class="form" >
+			    		<tr >
+			    			{% for col in candidate_table_columns %}
+			    			<th class="success">{{ col }}</th>
+			    			{% endfor %}
+
+			    		</tr>
+
+			    			<tr class = "table-fixed ">
+								{% for each_row in candidates_new %}
+										<td class="danger">
+											<a href="{{ url_for(('.candidate_edit_get'), candidate_id = each_row.id) }}">
+					    					{{ each_row.id}}
+					    				 </td>
+					    				 <td class="danger">
+											<a href="{{ url_for(('.candidate_edit_get'), candidate_id = each_row.id) }}">
+					    					{{ each_row.name}}
+					    				 </td>
+
+					    				  <td class="danger skillstd" id="skillstd">
+                                          {{ each_row.skills}}
+                                                              <!--         {% raw %}
+                                                                                                                                    <script type="application/x-handlebars" id="home-form-template">
+
+                                            <script type="text/javascript" >
+                                            displaySkills({{ each_row.skills}})
+                                            </script>
+
+                                    Stack the columns on mobile by making one full-width and the other half-width
+                                                  <div class="row">
+                                                    {{#if name}}
+                                                                        <div class="col-xs-6 col-md-8">
+
+                                                                                  <input type="text" name="name"  id="name" class="well well-sm input_linkedin_nonfocus" value="{{name}}">
+                                                                          </div>
+                                                    {{/if}}
+                                                            </div>
+                                                            </script>
+                                {% endraw %} -->
+                            										 </td>
+
+										  <td class="danger skillstd">
+											{{ each_row.email }}
+										 </td>
+
+										  <td class="danger ">
+											{{ each_row.city }}
+					    				  </td>
+
+						    </tr>
+					    		  {% endfor %}
+
+			    	</form>
+
+			    </table>
+
+             <span class="link"><a href = "{{url_for('.list_candidates')}}">View full Candidates list</a></span>
+
+		 {%else%}
+		 <p> No candidates have applied to your jobs yet. </p>
+
+         {%endif%}
+
+         </div>
+
+         <!-- <span class="link"><a href = "{{url_for('.list_jobs')}}">View full Candidates list</a></span> -->
+      </div>
+   </div>
+</div>
+
+
+
+{% endblock %}
