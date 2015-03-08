@@ -1,4 +1,4 @@
-Atlassian Sample Project
+Atlas Sample Project
 =========
 
   
