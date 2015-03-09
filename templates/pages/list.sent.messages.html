@@ -57,38 +57,18 @@ i.surfingbird::before{
 
 
 <div> <br><br> </div>
-<div class="row">
 
-<div class="col-md-6">
-<h3 class="col-sm-offset-0"> Jobs List </h3>
-<div class="panel panel-success">
-<div class="panel-heading">
-   <bold>
-   List of Jobs
-</div>
-<div></br></div>
-<div class="panel-body">
 
-   <form role="form" class="form-inline" method = "post">
-      
-      <div class="row">
-      <div class="col-md-4">
+    <h3 class="col-sm-offset-0"> Sent Messages List </h3>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                   <bold>
+                   List of Messages </bold>
+            </div>
+        <div>
 
-      <a href="{{ url_for('.job_create_get') }}"class="btn btn-danger " role="button">Delete Job</a>
 
-  </div>
-  <div class="col-md-4">
-       <a href="{{ url_for('.job_create_get') }}"class="btn btn-success" role="button">Candidates List </a>
 
-   </div>
-     <div class="col-md-4">  
- 
-        <a href="{{ url_for('.job_create_get') }} class="btn btn-info" role="button">Edit Job details </a>
-   </div>
-       </div>
-   </div>
-
-     <div class="row">
 <div class="col-md-12">
 	<div class="panel">
 	   <div class="panel-body">
@@ -96,26 +76,24 @@ i.surfingbird::before{
 
       <!-- First div has the dashboard of Jobs -->
       <div class="table-responsive">
-         <table class="table table-hover" >
+         <table class="table table-hover table-responsive" >
 			<form action="" method="post" class="form" >
-			    		<tr >
-			    			{% for col in job_table_columns %}
-			    			<th class="danger">{{ col }}</th>
+			    		<tr class=".table-hover primary">
+			    			{% for col in message_table_columns %}
+			    			<th class="danger">{{col}}</th>
 			    			{% endfor %}
 
 			    		</tr>
 
-			    			{% for each_row in jobs %}
-			    			<tr class = ".table-hover">
-			    			<td class="info"> <input type=radio name=do_delete value="{{ each_row[1]}}"></td>
+			    			{% for key,val in jobs.iteritems() %}
+                               <tr class=".table-hover active">
+                              <td class=".table-hover form-control primary">{{ key }}</td>
 
-					    				{% for each_item in each_row %}
-					    				<td class="info">
-					    					{{ each_item }}
-					    				{% endfor%}
-					    				</td>
+                              {% for k,v in val.iteritems() %}
 
-						    </tr>
+			    			  <td class=".table-hover table-responsive">{{ v }}</td>{% endfor %}
+                             </tr>
+
 					    	{% endfor %}
 
 			    	</form>
@@ -127,7 +105,7 @@ i.surfingbird::before{
 			 </div>
       <!--  <div class="panel-body"> -->
 
-   </div>
+
 </div>
 </div>
 <div>

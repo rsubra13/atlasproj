@@ -710,33 +710,31 @@ def sent_messages():
     if request.method == 'GET':
         retrieved_messages = Messages.query.all()
         print "retrieved_messages", retrieved_messages, type(retrieved_messages)
+        msg_dict = {}
+        sender_dict ={}
 
-        
-        data = Messages.query.order_by(Messages.message['message_time'])
-        print "data", data , type(data)
-        # for u in retrieved_messages:
-        #     print u.message, type(u.message), type(u)
-        #     print u.sender_username
+        for i,each_msg in enumerate(retrieved_messages):
+            if each_msg.sender_username == session['username']:
+                print "It comes here"
+                msg_json = json.loads(each_msg.message)
+                msg_dict[i] = msg_json
+                print "Msg Dict", msg_dict
 
-        mesa = [(u.id, u.message, u.sender_username) for u in retrieved_messages]
-       # print "mesa", mesa
-        print type(mesa)
+                # mentions = msg_json['emoticons']
+                # emoticons = msg_json['mentions']
+                # messagetime = msg_json['message_time']
+                # time_list.append(messagetime)
+                # links_list = msg_json['links']
+                # big_list = mentions+emoticons+ time_list+links_list
 
-        for each in mesa:
-            print each
 
-        loadedjosn = json.loads(mesa)
-        print "loaded Json", loadedjosn, type(loadedjosn)
-
-        message_table_columns = ['', 'ID', 'Title', 'Location',
-                             'Status', 'Date posted']
-        jobs = [(u.job_id, u.job_title, u.job_location,
-                 u.job_status, u.posted_date) for u in retrieved_messages]
-        print jobs
-
-        return render_template('pages/list.jobs.html',
+        message_table_columns = ['ID', 'Mentions',
+                             'Emoticons', 'Links', 'Time']
+        print "msg_dict" , msg_dict
+        print "message_table_colmns",message_table_columns
+        return render_template('pages/list.sent.messages.html',
                                user=session['username'],
-                               jobs=jobs,
+                               jobs=msg_dict,
                                message_table_columns=message_table_columns,
                                )
 

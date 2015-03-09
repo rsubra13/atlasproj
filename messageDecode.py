@@ -4,12 +4,12 @@ DEBUG = False  # Flag to set debug level. (print statements on/off)
 import re
 import json
 from bs4 import BeautifulSoup
-from lxml import html
+from lxml import html # unused
 from urllib2 import (URLError, HTTPError)
 import requests
 from requests.exceptions import SSLError
 import time
-from multiprocessing.pool import ThreadPool as Pool
+from multiprocessing.pool import ThreadPool as Pool  # unused
 
 
 class MessageDecode(object):
@@ -83,7 +83,7 @@ class MessageDecode(object):
                         # This gave HTTPError sometimes
                         soup = BeautifulSoup(response.text)
                         title = soup.title.string
-                        encoded_title = title.encode('ascii','ignore')
+                        encoded_title = title.encode('ascii', 'ignore')
                     except:
                         print "error"
                         encoded_title = None
