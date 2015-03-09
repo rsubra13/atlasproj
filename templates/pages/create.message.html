@@ -1,0 +1,94 @@
+{% extends 'layouts/user.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<!-- space -->
+<div>
+   <p></p>
+</div>
+
+
+
+<body >
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+
+
+
+  <style>
+  .ui-autocomplete-loading {
+    background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+  #city { width: 25em; }
+  </style>
+
+
+  <script type="application/javascript">
+         document.getElementById("json").innerHTML = JSON.stringify(jsonsg, undefined, 2)
+  </script>
+
+    <!-- text Field Macro -->
+
+      {% macro render_field(field) -%}
+        <div class="control-group{% if field.errors %} error{% endif %}">
+           <br>
+          <label class="control-label" for="{{ field.id }}">
+            {{ field.label }}
+          </label>
+          <div class="controls">
+            {{ field(**kwargs)|safe }}
+
+            {% for error in field.errors %}
+            <p class="help-block">
+              {{ error }}
+            </p>
+            {% endfor %}
+          </div>
+        </div>
+      {%- endmacro %}
+
+   <!--first split-->
+   <div class="row">
+   
+   <div class="col-md-6">
+    <h3> Create a New Message </h3>
+      <div class="panel panel-danger">
+         <div class="panel-heading">
+               <form class="well row-fluid" method="POST" action="/message/create/" >
+
+
+            {{ render_field(form.message,rows="6" ,cols="30" ,maxlength=360,class_='form-control col-md-12',
+                                 placeholder = "Please type your message here", required='required') }}
+
+            
+            <br><br>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+
+
+            </form>
+        </div>
+      </div>
+   </div>
+
+   <!-- Second split -->
+    {%if jsonmsg%}
+   <div class="col-md-6">
+    <h3> Parsed Message</h3>
+      <div class="panel panel-primary">
+         <div class="panel-heading">
+               <form class="well row-fluid" method="POST" action="/message/create/" >
+
+                 <pre id="json">
+            <p class="text-primary">{{ jsonmsg }}</p>
+            </pre></form>
+
+        </div>
+      </div>
+   </div>
+    {%endif%}
+  </div>
+</body>
+{% endblock %}
+

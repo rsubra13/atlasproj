@@ -19,21 +19,25 @@
    <h1>Welcome {{ username }}</h1>
 </div>
 
- <div class="form-control btn-info ">
-<div class = "well">
-{%if username%}
-<p class="lead help-block "><span >Dear {{username}}, </span> <a href="{{ url_for('.message_create_get') }}" class= "create_job_middle" type="button">create new Message
-</a> <span>and start your journey with us.</span> </p>
+
+<div class="row">
+   <div class="col-md-6">
+      <div class="panel panel-success">
+         <div class="panel-heading">
+               <form class="well row-fluid" >
+                   {%if username%}
+                    <p class="lead help-block "><span >Dear {{username}}, </span> <a href="{{ url_for('.message_create_get') }}" class= "create_job_middle" type="button">create new Message
+                    </a> <span>and start your journey with us.</span> </p>
 
 
-{%else%}
-<p class="lead help-block "><span >Dear user, </span> <a href="{{ url_for('.message_create_get') }}" class= "create_job_middle" type="button">create new Message
-</a> <span>and start your journey with us.</span> </p>
-{%endif%}
+                    {%else%}
+                    <p class="lead help-block "><span >Dear user, </span> <a href="{{ url_for('.message_create_get') }}" class= "create_job_middle" type="button">create new Message
+                    </a> <span>and start your journey with us.</span> </p>
 
-</a>
-</div>
+                    {%endif%}
+                </form>
+         </div></div></div></div>
 
-</div>
+
 
 {% endblock %}

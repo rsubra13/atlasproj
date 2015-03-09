@@ -333,8 +333,8 @@ def user_dashboard(username=None):
         #Recent Messages retrieval from the database
 
         retrieved_messages = None
-        jobs_new = None
-        job_table_columns = None
+        messages_new = None
+        message_table_columns = None
         try:
             retrieved_messages = Messages.query.order_by('posted_date desc') \
                                  .filter_by(backup_1=username).limit(5).all()
@@ -345,9 +345,9 @@ def user_dashboard(username=None):
             print " The error is ", e
 
         if retrieved_messages:
-            job_table_columns = ['ID', 'Title',
+            message_table_columns = ['ID', 'Title',
                                  'Location', 'Status', 'Date posted']
-            jobs_new = [{
+            messages_new = [{
                         'id': u.job_id,
                         'title': u.job_title,
                         'location': u.job_location,
@@ -355,7 +355,7 @@ def user_dashboard(username=None):
                         'date': u.posted_date}
                         for u in retrieved_messages]
 
-            print "Jobs New", jobs_new
+            print "Jobs New", messages_new
 
         # Candidates retrieval from the database.
         retrieved_candidates = None
@@ -391,9 +391,9 @@ def user_dashboard(username=None):
 
         return render_template('pages/home.dashboard.html',
                                user=session['username'],
-                               jobs_new=jobs_new,
+                               messages_new=messages_new,
                                candidates_new=candidates_new,
-                               job_table_columns=job_table_columns,
+                               message_table_columns=message_table_columns,
                                candidate_table_columns=candidate_table_columns
                                )
 
@@ -622,7 +622,7 @@ def job_search():
                                )
 
 """
-Job Create GET
+Message Create GET
 """
 
 
@@ -630,7 +630,7 @@ Job Create GET
 # @login_required
 def message_create_get():
     """
-    Create Job
+    Create Message
     """
     username = session['username']
     # Form details
@@ -639,7 +639,7 @@ def message_create_get():
     return render_template('pages/create.message.html', user=username, form=form)
 
 
-# Job create POST
+# Message create POST
 
 @messageHandle.route('/message/create/', methods=['POST'])
 # @login_required
@@ -671,12 +671,7 @@ def message_create_post():
             try:
                 db.session.add(msg)
                 db.session.commit()
-                flash('Message successfully added to DB')                
-                # Changed this as per Issue #6.
-
-                #return redirect(url_for('.message_create_get',
-                #                        id=msg.id,
-                #                        jsonmsg=formatted_json_message))
+                flash('Message successfully added to the database.')
                 return render_template('pages/create.message.html',
                                         user=user, 
                                         form=form,
@@ -707,15 +702,33 @@ List Messages
 
 
 #List Messages
-@messageHandle.route('/jobs/list/', methods=['GET', 'POST'])
-def list_jobs():
+@messageHandle.route('/messages/sent/', methods=['GET', 'POST'])
+def sent_messages():
     """
     List the Jobs
     """
     if request.method == 'GET':
-        retrieved_messages = Jobs.query.all()
+        retrieved_messages = Messages.query.all()
         print "retrieved_messages", retrieved_messages, type(retrieved_messages)
-        job_table_columns = ['', 'ID', 'Title', 'Location',
+
+        
+        data = Messages.query.order_by(Messages.message['message_time'])
+        print "data", data , type(data)
+        # for u in retrieved_messages:
+        #     print u.message, type(u.message), type(u)
+        #     print u.sender_username
+
+        mesa = [(u.id, u.message, u.sender_username) for u in retrieved_messages]
+       # print "mesa", mesa
+        print type(mesa)
+
+        for each in mesa:
+            print each
+
+        loadedjosn = json.loads(mesa)
+        print "loaded Json", loadedjosn, type(loadedjosn)
+
+        message_table_columns = ['', 'ID', 'Title', 'Location',
                              'Status', 'Date posted']
         jobs = [(u.job_id, u.job_title, u.job_location,
                  u.job_status, u.posted_date) for u in retrieved_messages]
@@ -724,7 +737,7 @@ def list_jobs():
         return render_template('pages/list.jobs.html',
                                user=session['username'],
                                jobs=jobs,
-                               job_table_columns=job_table_columns,
+                               message_table_columns=message_table_columns,
                                )
 
 
