@@ -37,7 +37,7 @@ class MessageDecode(object):
         # \B to catch the @ in the start of the word
         # \S- to handle only single word values
         try:
-            # Advanced method: Match multi-words which starts with '@'
+            # Advanced method: Match single-word which starts with '@'
             # at any part of the sentence
             mentions = re.findall(r"((?:@)[\w.]+)", inputstring)
 
