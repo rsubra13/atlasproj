@@ -16,6 +16,8 @@ import json
 # from numpy import cast
 import os
 import sys
+import messageDecode
+import time
 
 #from math import ceil
 from collections import defaultdict
@@ -28,10 +30,9 @@ from flask.ext.login import (LoginManager, current_user,
                              )
 from werkzeug.security import check_password_hash
 from flask.ext.login import AnonymousUserMixin
-from flask.views import MethodView
+from flask import jsonify
 from forms import (LoginForm, RegisterForm, ForgotForm,
-                   CreateJobForm, VehicleForm, CreateCandidateForm,
-                   GetJobListForm,  CreateCandidateLinkedInForm
+                   CreateMessageForm
                    )
 
 # Database imports
@@ -620,22 +621,6 @@ def job_search():
                                **context
                                )
 
-
-def allowed_file(filename):
-    return '.' in filename and \
-               filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
-
-
-
-@messageHandle.route('/user/job/apply', methods=['GET', 'POST'])
-def job_apply():
-    """
-      When the user tries to apply for a job
-    """
-
-    return render_template("pages/candidates.apply.html")
-
-
 """
 Job Create GET
 """
@@ -648,13 +633,10 @@ def message_create_get():
     Create Job
     """
     username = session['username']
-    retrieved_user_row = User.query.filter_by(username=username).first()
-    print "retrieved_user_row", retrieved_user_row.company_name
     # Form details
-    form = CreateJobForm(request.form)
-    form.process(job_institution=retrieved_user_row.company_name)
+    form = CreateMessageForm(request.form)
 
-    return render_template('pages/create.job.html', user=username, form=form)
+    return render_template('pages/create.message.html', user=username, form=form)
 
 
 # Job create POST
@@ -665,50 +647,40 @@ def message_create_post():
     """
     Create Job
     """
-    form = CreateJobForm(request.form)
+    form = CreateMessageForm(request.form)
     username = session['username']
 
-    print "create jobs::::"
+    print "Post Message to Database::::"
 
     if request.method == 'POST':
         print "did it come inside?", form, form.validate(), request.form
         print "errors", form.errors
         if form.validate():
-            job_title = request.form['job_title']
-            job_location = request.form['job_location']
-            job_institution = request.form['job_institution']
-            job_qualification = request.form['job_qualification']
-            job_type = request.form['job_type']
-            job_experience = request.form['job_experience']
-            job_summary = request.form['job_summary']
-            job_description = request.form['job_description']
-
-            registered_user = User.query.filter_by(username=username).first()
-
-            job = Jobs(
-                job_title,
-                job_location,
-                job_institution,
-                job_qualification,
-                job_type,
-                job_experience,
-                job_summary,
-                job_description,
-                registered_user.username,
-                registered_user.id
+            message = request.form['message']
+            obj = messageDecode.MessageDecode()
+            messageTime = time.ctime()
+            formatted_json_message = obj.decode(message,messageTime)
+            #print "Formatted JSON:::" , formatted_json_message
+            msg = Messages(
+                username,
+                formatted_json_message
             )
 
-            print "comes till here", job.job_title, job.job_id
+            #print "comes till here", msg.sender_username, msg.message
 
             try:
-                db.session.add(job)
+                db.session.add(msg)
                 db.session.commit()
-                flash('Job successfully created')
+                flash('Message successfully added to DB')                
                 # Changed this as per Issue #6.
-                return redirect(url_for('.job_edit_get',
-                                        job_id=job.job_id))
-                # return render_template('pages/create.job.html',
-                #                        user=user, form=form)
+
+                #return redirect(url_for('.message_create_get',
+                #                        id=msg.id,
+                #                        jsonmsg=formatted_json_message))
+                return render_template('pages/create.message.html',
+                                        user=user, 
+                                        form=form,
+                                        jsonmsg=formatted_json_message)
 
             except sqlalchemy.exc.IntegrityError as e:
                 db.session.rollback()
@@ -716,19 +688,16 @@ def message_create_post():
                 print " The error is ", e
                 flash('Job already Exists.\
                      Please check the details once')
-                return redirect(url_for('.job_create'))
+                return redirect(url_for('.message_create_get'))
 
         else:
 
             flash("Please check the errors below")
             print "form is ", form, request.form
-            return render_template('pages/create.job.html',
+            return render_template('pages/create.message.html',
                                    user=user, form=form)
-            # return redirect(url_for('.job_create'))
-            # session['frontend.get_signup.data'] = form.data
-            # return redirect(get_redirect_back(url_for('.get_signup')))
 
-    return render_template('pages/create.job.html', user=user, form=form)
+    return render_template('pages/create.message.html', user=user, form=form)
 
 
 

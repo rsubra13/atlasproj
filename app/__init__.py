@@ -70,9 +70,6 @@ def app_init():
     capp.debug = True
     capp.register_blueprint(messageHandle)
 
-    capp.add_url_rule(
-        '/models/<int:make_id>/', view_func=views.ModelsAPI.as_view('models_api'),
-        methods=['GET'])
 
     capp.jinja_env.globals.update({
         'url_for_other_page': url_for_other_page,

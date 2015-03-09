@@ -3,10 +3,13 @@ DEBUG = False  # Flag to set debug level. (print statements on/off)
 
 import re
 import json
-from bs4 import BeautifulSoup
+from bs4 import (BeautifulSoup,BeautifulStoneSoup)
+from lxml import html
 from urllib2 import (URLError, HTTPError)
 import requests
+from requests.exceptions import SSLError
 import time
+from multiprocessing.pool import ThreadPool as Pool
 
 
 class MessageDecode(object):
@@ -17,10 +20,10 @@ class MessageDecode(object):
     def removeduplicates(self, inputlist):
         return list(set(inputlist))
 
-    def decode(self, inputstring):
+    def decode(self, inputstring,messagetime):
         """
         :param inputstring: the input string which needs to be parsed and split
-        :return: None
+        :return: json
         """
 
         # Dictionary of list of 'mentions', 'emoticons' and 'links'
@@ -67,37 +70,46 @@ class MessageDecode(object):
                                   '(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', inputstring)
             url_dict = {}
             url_list_of_dicts = []
+            #pool = Pool(8)
             if DEBUG:
                 print(url_list)
             try:
                 for urlid, each_url in enumerate(url_list):
-
-                    # Get the HTML content of the given web URL
-                    response = requests.get(each_url)
-
-                    # Use BeautifulSoup to parse and extract page title
-                    soup = BeautifulSoup(response.text)
-                    title = soup.title.string
+                    try:
+                        # Get the HTML content of the given web URL
+                        response = requests.get(each_url.decode('utf-8', 'ignore'))
+                        # Use BeautifulSoup to parse and extract page title
+                        # This gave HTTPError sometimes
+                        soup = BeautifulSoup(response.text)
+                        title = soup.title.string
+                        encoded_title = title.encode('ascii','ignore')
+                    except:
+                        print "error"
+                        encoded_title = None
+                    # Use lxml to avoid those errors and its faster than BS.
+                    #parsed_tree = html.fromstring(response.text)
+                    #title = parsed_tree.xpath('//title/text()')
 
                     # Create the dict
                     url_dict['id'] = urlid
                     url_dict['url'] = each_url
-                    url_dict['title'] = title
+                    url_dict['title'] = encoded_title
 
                     # Add this list of dicts to the final_dict
                     url_list_of_dicts.append(url_dict.copy())
                     # .copy() is important else same dict will be copied.
                     final_dict['links'] = url_list_of_dicts
-                    final_dict['message_time'] = messageTime
+                    final_dict['message_time'] = messagetime
 
-            except (HTTPError, URLError, ValueError) as e:
+            except (HTTPError, URLError, ValueError,SSLError) as e:
                 print("The server couldn't be reached")
                 print('Error code:'), e
 
         except AssertionError:
             pass
-        formatted_json = json.dumps(final_dict, sort_keys=True, indent=4)
-        print "###########  Formatted JSON ############ \n", formatted_json
+        formatted_json = json.dumps(final_dict, sort_keys=True, indent=4).decode('utf8')
+
+        return formatted_json
 
 
 if __name__ == '__main__':
@@ -107,5 +119,5 @@ if __name__ == '__main__':
     #                 "Did yo u check Adam's blog http://www.imdb.com/title/tt0583452/?ref_=tt_eps_rhs_1 (angry) @Ramki @jacob18"
     #                 "(Angry ) (Smilaey) ftp://ftp6.jp.freebsd.org/pub/FreeBSD/ (Smiley)")
     messageTime = time.ctime()
-    print messageTime
-    newObj.decode(inputString)
+    formatted_json = newObj.decode(inputString,messageTime)
+    print "###########  Formatted JSON ############ \n", formatted_json

@@ -84,15 +84,16 @@
                 <li{%if request.endpoint == 'create_graph' %} class ="active" {% endif %} ><a href = "{{url_for('.message_create_get')}}">Inbox</a></li>
 
                </ul>
+             <li {% if request.endpoint == 'logout'  %} class="active" {% endif %}><a href="{{ url_for('.logout') }}">Logout</a></li>
+
+            <li><img src="logo.png"></li>
+
             </li>
 
  			
 
 
 
-            <li {% if request.endpoint == 'logout'  %} class="active" {% endif %}><a href="{{ url_for('.logout') }}">Logout</a></li>
-
-            <!--<li><img src="logo.jpeg"></li>-->
 
          </ul>
         </div><!--/.nav-collapse -->

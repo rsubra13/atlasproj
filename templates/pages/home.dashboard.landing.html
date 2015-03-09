@@ -22,12 +22,12 @@
  <div class="form-control btn-info ">
 <div class = "well">
 {%if username%}
-<p class="lead help-block "><span >Dear {{username}}, </span> <a href="{{ url_for('.job_create_get') }}" class= "create_job_middle" type="button">create new Message
+<p class="lead help-block "><span >Dear {{username}}, </span> <a href="{{ url_for('.message_create_get') }}" class= "create_job_middle" type="button">create new Message
 </a> <span>and start your journey with us.</span> </p>
 
 
 {%else%}
-<p class="lead help-block "><span >Dear user, </span> <a href="{{ url_for('.job_create_get') }}" class= "create_job_middle" type="button">create new Message
+<p class="lead help-block "><span >Dear user, </span> <a href="{{ url_for('.message_create_get') }}" class= "create_job_middle" type="button">create new Message
 </a> <span>and start your journey with us.</span> </p>
 {%endif%}
 

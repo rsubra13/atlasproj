@@ -18,5 +18,13 @@ for i,u in enumerate(url):
     print "li[0]", li[0], type(li[0])
 
 
+str =  '''16.6. multiprocessing ',uOOenuoonu0094 Process-
+based v,uOOenu008tmu009cthreadingxuooenuoogoxu009d interface'''
+
+print str.decode('utf-8')
+
+
+
+
 
 
